@@ -59,4 +59,26 @@ class TestPosition(TestCase):
 
     def testTotalValue(self):
         # TODO: test to ensure total value is accurate after adding positions to portfolio
-        pass
+        position1 = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.ticker,
+            quantity=self.quantity,
+            average_price=self.average_price,
+        )
+        position2 = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.ticker,
+            quantity=self.quantity,
+            average_price=self.average_price,
+        )
+        position3 = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.ticker,
+            quantity=self.quantity,
+            average_price=self.average_price,
+        )
+
+        expected_total_value = self.portfolio.cash_balance + position1.market_value() + position2.market_value() + position3.market_value()
+
+        self.assertAlmostEqual(self.portfolio.total_value(), expected_total_value)
+

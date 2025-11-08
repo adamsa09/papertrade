@@ -5,6 +5,7 @@ from portfolio.models import Portfolio, Position
 class Trade(models.Model):
     TRADE_TYPE_CHOICES = (
             ('buy', 'Buy'),
+
             ('sell', 'SELL')
     )
 

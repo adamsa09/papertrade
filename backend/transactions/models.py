@@ -4,9 +4,9 @@ from portfolio.models import Portfolio, Position
 # Create your models here.
 class Trade(models.Model):
     TRADE_TYPE_CHOICES = (
-            ('buy', 'Buy'),
+            ('buy', 'buy'),
 
-            ('sell', 'SELL')
+            ('sell', 'sell')
     )
 
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)

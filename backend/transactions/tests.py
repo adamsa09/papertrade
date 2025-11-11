@@ -3,8 +3,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 import yfinance as yf
 
-from transactions.services import tradeToPosition
-from portfolio.models import Portfolio
+from transactions.services import execute_trade
+from portfolio.models import Portfolio, Position
 from transactions.models import Trade
 
 
@@ -39,7 +39,24 @@ class TestTransactions(TestCase):
         self.assertEqual(trade.price, self.price)
 
     def testPositionCreation(self):
-        pass
+        trade = Trade.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            trade_type="buy",
+            quantity=self.quantity,
+            price=self.price,
+        )
+
+        expected_position = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            quantity=self.quantity,
+            average_price=self.price,
+        )
+
+        position = execute_trade(trade)
+
+        self.assertEqual(position, expected_position)
 
     def testPositionUpdate(self):
         pass

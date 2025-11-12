@@ -19,14 +19,18 @@ def execute_trade(trade: Trade):
         position = Position.objects.filter(stock_symbol=trade.stock_symbol)[0]
 
         position = update_position(position, trade)
+        
+        position.save()
 
     else:
         position = new_position(trade)
 
+        position.save()
+
     return position
 
 
-def update_position(position: Position, trade: Trade):
+def update_position(position: Position, trade: Trade) -> Position:
     """
     Update a position based on a trade
 
@@ -38,10 +42,9 @@ def update_position(position: Position, trade: Trade):
         position (Position): the updated position
     """
 
-    updated_average_price = update_average_price(position, trade)
-    position.average_price = updated_average_price
-
     if trade.trade_type == "buy":
+        updated_average_price = update_average_price(position, trade)
+        position.average_price = updated_average_price
         position.quantity = position.quantity + trade.quantity
     elif trade.trade_type == "sell" and trade.quantity <= position.quantity:
         position.quantity = position.quantity - trade.quantity
@@ -50,7 +53,7 @@ def update_position(position: Position, trade: Trade):
     return position
 
 
-def new_position(trade: Trade):
+def new_position(trade: Trade) -> Position:
     """
     Create a position based on a trade
 
@@ -59,10 +62,7 @@ def new_position(trade: Trade):
 
     Returns:
         position (Position): the new position
-    """
-    if trade.type == "sell":
-        return 1
-
+    """    
     position = Position(
         portfolio=trade.portfolio,
         stock_symbol=trade.stock_symbol,
@@ -80,9 +80,12 @@ def update_average_price(position: Position, trade: Trade):
     Args:
         position: the position of which to update the average price
         trade: the trade causing the average price to change
+
+    Returns:
+        average_price: the new average price
     """
     average_price = (
-        (position.quantity * position.average_price) + (trade.quantity * trade.price)
+        float(position.quantity * position.average_price) + (trade.quantity * trade.price)
     ) / (position.quantity + trade.quantity)
 
     return average_price

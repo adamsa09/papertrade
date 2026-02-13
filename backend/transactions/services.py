@@ -1,5 +1,4 @@
 from typing import ParamSpecArgs
-import yfinance as yf
 from transactions.models import Trade
 from portfolio.models import Portfolio, Position
 
@@ -7,13 +6,12 @@ from portfolio.models import Portfolio, Position
 def execute_trade(trade: Trade):
     """
     Create or update a position from a trade
-    Function does not save the updated position in the DB.
 
     Args:
         trade (Trade): the trade to be executed
 
     Returns:
-        position (Position): the position derived from the trade
+        position (Position): the position created 
     """
     if Position.objects.filter(stock_symbol=trade.stock_symbol):
         position = Position.objects.filter(stock_symbol=trade.stock_symbol)[0]
@@ -26,6 +24,8 @@ def execute_trade(trade: Trade):
         position = new_position(trade)
 
         position.save()
+
+    update_balance(trade)
 
     return position
 
@@ -89,3 +89,17 @@ def update_average_price(position: Position, trade: Trade):
     ) / (position.quantity + trade.quantity)
 
     return average_price
+
+def update_balance(trade: Trade):
+    """
+    Update the cash balance of a portfolio
+
+    Args:
+        trade: the trade that will impact the cash balance
+
+    Returns:
+        
+    """
+    trade.portfolio.cash_balance = trade.portfolio.cash_balance - (trade.quantity * trade.price)
+
+    return trade.portfolio

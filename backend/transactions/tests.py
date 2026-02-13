@@ -1,3 +1,4 @@
+from asyncio import wait
 from contextlib import nullcontext
 from decimal import Decimal
 from django.test import TestCase
@@ -58,6 +59,38 @@ class TestTransactions(TestCase):
 
         self.assertEqual(position, expected_position)
 
+    def testPositionSellAll(self):
+        position = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            quantity=self.quantity,
+            average_price=self.price,
+        )
+
+        trade = Trade.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            trade_type="sell",
+            quantity=self.quantity,
+            price=self.price,
+        )
+
+        execute_trade(trade)
+
+        expected_position = Position.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            quantity=0,
+            average_price=self.price,
+        )
+
+        actual_position = Position.objects.filter(stock_symbol=self.stock_symbol)[0]
+
+        self.assertEqual(expected_position.portfolio, actual_position.portfolio)
+        self.assertEqual(expected_position.stock_symbol, actual_position.stock_symbol)
+        self.assertEqual(expected_position.quantity, actual_position.quantity)
+        self.assertEqual(expected_position.average_price, actual_position.average_price)
+
     def testPositionUpdateBuy(self):
         position = Position.objects.create(
             portfolio=self.portfolio,
@@ -95,7 +128,7 @@ class TestTransactions(TestCase):
         self.assertEqual(expected_position.quantity, actual_position.quantity)
         self.assertEqual(expected_position.average_price, actual_position.average_price)
 
-    def testPositionUpdateBuy(self):
+    def testPositionUpdateSell(self):
         position = Position.objects.create(
             portfolio=self.portfolio,
             stock_symbol=self.stock_symbol,
@@ -126,3 +159,21 @@ class TestTransactions(TestCase):
         self.assertEqual(expected_position.stock_symbol, actual_position.stock_symbol)
         self.assertEqual(expected_position.quantity, actual_position.quantity)
         self.assertEqual(expected_position.average_price, actual_position.average_price)
+
+    def testBalanceUpdate(self):
+        trade = Trade.objects.create(
+            portfolio=self.portfolio,
+            stock_symbol=self.stock_symbol,
+            trade_type="buy",
+            quantity=self.quantity,
+            price=self.price,
+        )
+        
+
+        expected_balance = self.portfolio.cash_balance - (self.quantity * self.price)
+        execute_trade(trade)
+        
+        self.assertEqual(expected_balance, self.portfolio.cash_balance)
+
+
+       

@@ -13,6 +13,8 @@ def execute_trade(trade: Trade):
     Returns:
         position (Position): the position created 
     """
+
+    # Verify if position exists
     if Position.objects.filter(stock_symbol=trade.stock_symbol):
         position = Position.objects.filter(stock_symbol=trade.stock_symbol)[0]
 
@@ -25,7 +27,7 @@ def execute_trade(trade: Trade):
 
         position.save()
 
-    update_balance(trade)
+    update_balance_basedon_trade(trade)
 
     return position
 
@@ -90,7 +92,7 @@ def update_average_price(position: Position, trade: Trade):
 
     return average_price
 
-def update_balance(trade: Trade):
+def update_balance_basedon_trade(trade: Trade):
     """
     Update the cash balance of a portfolio
 

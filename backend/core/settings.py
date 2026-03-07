@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -41,17 +40,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "portfolio",
     "transactions",
-=======
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'portfolio',
-    'transactions'
->>>>>>> 571f8e3ad5d5a6479d6294ded5b4c3ac94a3a70e
 ]
 
 MIDDLEWARE = [

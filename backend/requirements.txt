@@ -6,8 +6,12 @@ charset-normalizer==3.4.4
 curl_cffi==0.13.0
 debugpy==1.8.17
 Django==5.2.8
+django-extensions==4.1
+django-filter==25.2
+djangorestframework==3.16.1
 frozendict==2.4.6
 idna==3.11
+Markdown==3.10.2
 multitasking==0.0.12
 numpy==2.3.4
 pandas==2.3.3
@@ -15,6 +19,7 @@ peewee==3.18.3
 platformdirs==4.5.0
 protobuf==6.33.0
 pycparser==2.23
+pygraphviz==1.14
 python-dateutil==2.9.0.post0
 pytz==2025.2
 requests==2.32.5
@@ -26,3 +31,4 @@ tzdata==2025.2
 urllib3==2.5.0
 websockets==15.0.1
 yfinance==0.2.66
+djangorestframework

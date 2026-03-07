@@ -1,0 +1,17 @@
+POST http://127.0.0.1:8000/login
+Content-Type: application/json
+
+{ "username": "adam", "password": "password"}
+
+###
+
+POST http://127.0.0.1:8000/signup
+Content-Type: application/json
+
+{ "username": "adam", "password": "password", "email": "adam_sar09@outlook.com" }
+
+### 
+
+GET http://127.0.0.1:8000/signup
+Content-Type: application/json
+{}
